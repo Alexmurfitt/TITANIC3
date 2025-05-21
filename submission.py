@@ -1,15 +1,26 @@
+from autogluon.tabular import TabularPredictor
 import pandas as pd
-import joblib
 
-# Cambia aquí el nombre si tu modelo final es lgb_model.pkl o lgb_model.joblib
-model = joblib.load('models/lgbm_best_model.pkl')
-X_test = pd.read_csv('test_final_imputed.csv')
+try:
+    print("Cargando modelo AutoGluon...")
+    predictor = TabularPredictor.load("AutogluonModels/ag-20250521_102821")
 
-# Predice
-preds = model.predict(X_test)
+    print("Cargando test.csv...")
+    test = pd.read_csv("test.csv")
+    print(f"Test shape: {test.shape}")
 
-# Carga PassengerId y exporta submission.csv
-test_df = pd.read_csv('test.csv')
-submission = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': preds})
-submission.to_csv('submission.csv', index=False)
-print('✅ Submission generado correctamente: submission.csv')
+    print("Realizando predicción...")
+    preds = predictor.predict(test)
+    print(f"Predicciones hechas. N = {len(preds)}")
+
+    submission = pd.DataFrame({
+        "PassengerId": test["PassengerId"],
+        "Survived": preds.astype(int)
+    })
+
+    output_file = "submission.csv"
+    submission.to_csv(output_file, index=False)
+    print(f"✅ ¡Archivo {output_file} guardado correctamente!")
+
+except Exception as e:
+    print(f"ERROR: {e}")
