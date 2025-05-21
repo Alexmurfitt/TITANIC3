@@ -1,8 +1,15 @@
 import pandas as pd
+import joblib
 
-submission = pd.read_csv('submission.csv')
-print("Primeras filas del submission:")
-print(submission.head())
+# Cambia aquí el nombre si tu modelo final es lgb_model.pkl o lgb_model.joblib
+model = joblib.load('models/lgbm_best_model.pkl')
+X_test = pd.read_csv('test_final_imputed.csv')
 
-print("\nDistribución de predicciones:")
-print(submission['Survived'].value_counts())
+# Predice
+preds = model.predict(X_test)
+
+# Carga PassengerId y exporta submission.csv
+test_df = pd.read_csv('test.csv')
+submission = pd.DataFrame({'PassengerId': test_df['PassengerId'], 'Survived': preds})
+submission.to_csv('submission.csv', index=False)
+print('✅ Submission generado correctamente: submission.csv')

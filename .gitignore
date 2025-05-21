@@ -1,0 +1,19 @@
+# Entornos virtuales
+venv/
+venv_titanic311/
+.env/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Notebooks temporales de Jupyter
+.ipynb_checkpoints/
+
+# Salidas de logs, bases de datos temporales, archivos de datos generados
+*.log
+*.sqlite3
+*.csv
+
+# CatBoost, LightGBM, etc.
+catboost_info/
